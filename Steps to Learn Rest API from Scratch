@@ -1,0 +1,63 @@
+Rest API Automation Framework from Scratch
+• Create Maven Project with Cucumber and Rest Assured Dependencies 
+• Define Project Structure with Cucumber Framework Setup
+• Create Feature File with the Test case you want to Automate
+• Implement Smart Step Definition files with supported code
+• Build Utils File to define all reusable request and response specifications
+• Build Pojo classes for Serializing and Deserializing Json payload
+• Implement logging into Framework to log request and response details 
+• Develop End to End Functionality Test with all validations and Assertions 
+• Define Global Properties and drive all the global variables from Properties file
+• Define Enum class with constants to centralize all resources details
+• Implement Data driven Mechanism to drive data dynamically from Feature files
+• Implement Parameterization to run tests with multiple data sets using Cucumber Example Keyword
+• Add More Tests and implement Tagging Mechanism to run selected Tests from Test Runner file
+• Implement Pre and Postconditions for tests with Cucumber Hooks
+• Execute Complete Framework from Maven Commands
+
+if in d drive:
+D:
+cd d drive location of the project
+mvn test : both compile & run the test
+
+mvn test -Dcucumber.options="--tags @AddPlace"  -- ideally should work (Cucumber 4.x or below) if not then
+mvn test -Dcucumber.filter.tags="@AddPlace"  -- ( Cucumber 5.x+)
+
+D is for providing parameter which u r gonna parse is cucumber.options in maven commands 
+
+• Implement Maven driven global values into Test for dynamic execution
+• Generate Reports for Test Execution results
+• Integrate the Framework into Jenkin CI/CD tool
+• Implement Parameterized Jenkin job to choose the global values at run time
+
+**********
+
+Press Ctrl+Shift+F (Windows/Linux) or Cmd+Shift+F (Mac) to format the file.
+
+Report: 
+D:\Git Projects\Framework_API_RSA_Cucumber_Rest_Assured\target\cucumber-html-reports\overview-features.html
+
+Download the latest Jenkins WAR file from Jenkins' official website. https://updates.jenkins.io/download/war/
+
+Start Jenkins:
+
+java -jar jenkins.war --httpPort=9090
+
+Access Jenkins in your web browser at:
+
+http://localhost:9090
+
+Install the required software 
+
+Password also be found at: C:\Program Data\Jenkins\secrets\initialAdminPassword
+
+
+*******
+
+ Select: New Item --> Select: FreeStyle Project --> Name it as: RestAPIFrameWork --> General --> Advanced --> Click Use custom workspace --> give local Path url of the project in Directory i.e D:\Git Projects\Framework_API_RSA_Cucumber_Rest_Assured
+Build Steps --> Add Build Steps --> Invoke top-level Maven targets --> Goals -->  
+
+mvn test verify -Dcucumber.filter.tags="@AddPlace"
+ 
+
+clean test verify -Dcucumber.filter.tags="${TAG}"
