@@ -1,0 +1,176 @@
+
+if in d drive:
+D:
+cd d drive location of the project
+mvn test : both compile & run the test
+
+mvn test -Dcucumber.options="--tags @AddPlace"  -- ideally should work (Cucumber 4.x or below) if not then
+mvn test -Dcucumber.filter.tags="@AddPlace"  -- ( Cucumber 5.x+)
+
+D is for providing parameter which u r gonna parse is cucumber.options in maven commands 
+
+
+
+**********
+
+Press Ctrl+Shift+F (Windows/Linux) or Cmd+Shift+F (Mac) to format the file.
+
+Report: 
+D:\Git Projects\Framework_API_RSA_Cucumber_Rest_Assured\target\cucumber-html-reports\overview-features.html
+
+Download the latest Jenkins WAR file from Jenkins' official website. https://updates.jenkins.io/download/war/
+
+Start Jenkins:
+
+java -jar jenkins.war --httpPort=9090
+
+Access Jenkins in your web browser at:
+
+http://localhost:9090
+
+Install the required software 
+
+Password also be found at: C:\Program Data\Jenkins\secrets\initialAdminPassword
+
+
+*******
+
+ Select: New Item --> Select: FreeStyle Project --> Name it as: RestAPIFrameWork --> General --> Advanced --> Click Use custom workspace --> give local Path url of the project in Directory i.e D:\Git Projects\Framework_API_RSA_Cucumber_Rest_Assured
+Build Steps --> Add Build Steps --> Invoke top-level Maven targets --> Goals -->  
+
+mvn test verify -Dcucumber.filter.tags="@AddPlace"
+ 
+clean test verify -Dcucumber.filter.tags="${TAG}"
+
+********
+
+step-by-step guide to run your Maven tests, format files, generate reports, and integrate with Jenkins:
+
+1. Running Maven Tests from the Command Line
+• To run your Maven tests from the D drive, follow these steps:
+
+a. Navigate to your project folder: Open your command prompt or terminal and run:
+
+D:
+cd D:\path\to\your\project
+
+b. Run the tests (compile and execute): To compile and run your tests:
+
+mvn test
+
+c. Run specific tests using tags (for Cucumber versions 4.x and below): If you want to run specific tests based on tags, you can use the following Maven command:
+
+mvn test -Dcucumber.options="--tags @AddPlace"
+
+d. For Cucumber versions 5.x or above, use this command:
+
+mvn test -Dcucumber.filter.tags="@AddPlace"
+
+Explanation:
+
+• -Dcucumber.options: This option is used to specify the tag filters for versions 4.x and below.
+
+• -Dcucumber.filter.tags: This is used for filtering tags in versions 5.x or above.
+
+---------
+
+2. Formatting the File in Your IDE
+
+To format the file in Sublime Text or your IDE:
+
+• Windows/Linux: Press Ctrl + Shift + F
+
+• Mac: Press Cmd + Shift + F
+
+This will auto-format the file for better readability.
+
+-------
+
+3. Viewing the Test Report
+• After running your tests, the results are saved in the following location:
+
+D:\Git Projects\Framework_API_RSA_Cucumber_Rest_Assured\target\cucumber-html-reports\overview-features.html
+
+You can open this HTML file in a web browser to view the detailed test execution report.
+
+---------
+
+4. Installing Jenkins and Setting Up CI/CD Integration
+a. Download the Latest Jenkins WAR File: Go to Jenkins Official Website and download the latest Jenkins WAR file.
+
+b. Start Jenkins: Open a terminal/command prompt and navigate to the folder where you downloaded the jenkins.war file. Run:
+
+java -jar jenkins.war --httpPort=9090
+
+c. Access Jenkins: Open your web browser and navigate to:
+
+http://localhost:9090  OR http://localhost:8080
+
+d. Find the Admin Password: The Jenkins initial admin password can be found at the following location:
+
+C:\Program Data\Jenkins\secrets\initialAdminPassword
+
+Open the file to retrieve the password and log into Jenkins.
+
+-----
+
+5. Setting Up Jenkins Job for Running Maven Tests
+a. Create a New Item in Jenkins:
+
+    • Go to Jenkins Dashboard.
+
+    • Click on New Item.
+
+    • Select FreeStyle Project and give it a name like RestAPIFrameWork.
+
+    • Under the General tab, select Advanced.
+
+    • Check the option Use custom workspace and enter the local path of your project directory, e.g.:
+
+D:\Git Projects\Framework_API_RSA_Cucumber_Rest_Assured
+
+b. Add Build Steps:
+
+    • In Build Steps, click on Add Build Step.
+
+    • Select Invoke top-level Maven targets.
+
+    • Under Goals, enter:
+
+mvn test verify -Dcucumber.filter.tags="@AddPlace"
+
+c.Run the Jenkins Job: Once everything is set up, you can trigger the job manually or on code changes.
+
+6. Using Parameterized Jenkins Jobs
+a. Add Parameterized Job: In Jenkins, you can create a parameterized job to pass dynamic values such as tags.
+
+    • When setting up the job, check This project is parameterized.
+
+    • Add a String Parameter for the TAG with the default value like @AddPlace.
+
+b. Run the Job with Dynamic Tags: You can pass the tag dynamically using:
+
+clean test verify -Dcucumber.filter.tags="${TAG}"
+
+This allows you to dynamically choose the tag at runtime when triggering the job.
+
+With this setup, you can run your Maven tests, integrate them into Jenkins, and generate reports. You can also make the test execution more flexible with parameterized Jenkins jobs for dynamic execution of tests.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

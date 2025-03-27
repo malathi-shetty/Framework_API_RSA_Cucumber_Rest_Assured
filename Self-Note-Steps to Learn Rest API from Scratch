@@ -1,0 +1,349 @@
+Rest API Automation Framework from Scratch
+• Create Maven Project with Cucumber and Rest Assured Dependencies 
+• Define Project Structure with Cucumber Framework Setup
+• Create Feature File with the Test case you want to Automate
+• Implement Smart Step Definition files with supported code
+• Build Utils File to define all reusable request and response specifications
+• Build Pojo classes for Serializing and Deserializing Json payload
+• Implement logging into Framework to log request and response details 
+• Develop End to End Functionality Test with all validations and Assertions 
+• Define Global Properties and drive all the global variables from Properties file
+• Define Enum class with constants to centralize all resources details
+• Implement Data driven Mechanism to drive data dynamically from Feature files
+• Implement Parameterization to run tests with multiple data sets using Cucumber Example Keyword
+• Add More Tests and implement Tagging Mechanism to run selected Tests from Test Runner file
+• Implement Pre and Postconditions for tests with Cucumber Hooks
+• Execute Complete Framework from Maven Commands
+• Implement Maven driven global values into Test for dynamic execution
+• Generate Reports for Test Execution results
+• Integrate the Framework into Jenkin CI/CD tool
+• Implement Parameterized Jenkin job to choose the global values at run time
+
+**************
+
+1. Create Maven Project with Cucumber and Rest Assured Dependencies
+• Create a new Maven project in your IDE (e.g., IntelliJ, Eclipse).
+
+• Define pom.xml with the necessary dependencies for:
+
+    • Cucumber: For behavior-driven development.
+
+    • Rest Assured: For making and verifying HTTP requests.
+
+    • TestNG (optional): For running tests.
+
+Example pom.xml:
+
+
+<dependencies>
+    <!-- Cucumber Dependencies -->
+    <dependency>
+        <groupId>io.cucumber</groupId>
+        <artifactId>cucumber-java</artifactId>
+        <version>YOUR_CUCUMBER_VERSION</version>
+    </dependency>
+    <dependency>
+        <groupId>io.cucumber</groupId>
+        <artifactId>cucumber-spring</artifactId>
+        <version>YOUR_CUCUMBER_VERSION</version>
+    </dependency>
+
+    <!-- Rest Assured Dependency -->
+    <dependency>
+        <groupId>io.rest-assured</groupId>
+        <artifactId>rest-assured</artifactId>
+        <version>YOUR_REST_ASSURED_VERSION</version>
+    </dependency>
+
+    <!-- TestNG Dependency (Optional) -->
+    <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>YOUR_TESTNG_VERSION</version>
+        <scope>test</scope>
+    </dependency>
+
+    <!-- Jackson (For JSON Parsing) -->
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>YOUR_JACKSON_VERSION</version>
+    </dependency>
+</dependencies>
+
+2. Define Project Structure with Cucumber Framework Setup
+• Organize your project into a standard structure:
+
+• src/main/java: Application code (if needed).
+
+• src/test/java: Test classes.
+
+    • stepDefinitions/: Cucumber step definitions.
+
+    • pojos/: POJO (Plain Old Java Objects) classes.
+
+    • utils/: Helper utilities (request/response handling).
+
+• src/test/resources/: Feature files and configurations.
+
+    • features/: Gherkin feature files (e.g., login.feature).
+
+    • config/: Property files, configuration files.
+
+3. Create Feature File with the Test Case You Want to Automate
+Write your feature file in Gherkin syntax under src/test/resources/features/.
+
+Example login.feature:
+
+Feature: User login API
+
+  Scenario: Valid login with correct username and password
+    Given User sends a POST request to "/login" with valid credentials
+    Then The response status code should be 200
+    And The response body should contain the message "Login successful"
+
+4. Implement Smart Step Definition Files with Supported Code
+• Implement Cucumber step definitions in stepDefinitions/ to map each Gherkin step to Java code.
+
+Example LoginSteps.java:
+
+public class LoginSteps {
+
+    private static Response response;
+
+    @Given("User sends a POST request to {string} with valid credentials")
+    public void sendLoginRequest(String endpoint) {
+        String payload = "{ \"username\": \"testuser\", \"password\": \"password123\" }";
+        response = given()
+                  .contentType(ContentType.JSON)
+                  .body(payload)
+                  .when()
+                  .post(endpoint);
+    }
+
+    @Then("The response status code should be {int}")
+    public void validateStatusCode(int expectedStatusCode) {
+        Assert.assertEquals(response.statusCode(), expectedStatusCode);
+    }
+
+    @Then("The response body should contain the message {string}")
+    public void validateResponseMessage(String expectedMessage) {
+        String actualMessage = response.jsonPath().getString("message");
+        Assert.assertEquals(actualMessage, expectedMessage);
+    }
+}
+
+5. Build Utils File to Define All Reusable Request and Response Specifications
+• Create utility methods to manage common request/response handling logic (e.g., request specifications, response parsing).
+
+Example RestUtils.java:
+
+public class RestUtils {
+
+    public static RequestSpecification getRequestSpec() {
+        return new RequestSpecBuilder()
+                .setBaseUri("https://api.example.com")
+                .setContentType(ContentType.JSON)
+                .build();
+    }
+
+    public static Response sendPostRequest(String endpoint, String body) {
+        return given(getRequestSpec())
+                .body(body)
+                .when()
+                .post(endpoint);
+    }
+}
+
+6. Build POJO Classes for Serializing and Deserializing JSON Payload
+• Use POJOs (Plain Old Java Objects) to map the request and response data for better structure.
+
+Example LoginRequest.java:
+
+public class LoginRequest {
+
+    private String username;
+    private String password;
+
+    // Getters and Setters
+}
+Example LoginResponse.java:
+
+public class LoginResponse {
+
+    private int statusCode;
+    private String message;
+
+    // Getters and Setters
+}
+
+7. Implement Logging into Framework to Log Request and Response Details
+• Use logging frameworks (like log4j, slf4j) to log request and response details.
+
+Example Logging.java:
+
+public class Logging {
+
+    private static Logger logger = LoggerFactory.getLogger(Logging.class);
+
+    public static void logRequest(Request request) {
+        logger.info("Request: " + request.toString());
+    }
+
+    public static void logResponse(Response response) {
+        logger.info("Response: " + response.asString());
+    }
+}
+
+8. Develop End-to-End Functionality Test with Validations and Assertions
+• Use assertions to validate the actual results against the expected ones in your tests.
+
+Example:
+
+public class LoginTests {
+
+    @Test
+    public void testLoginSuccess() {
+        Response response = RestUtils.sendPostRequest("/login", "{ \"username\": \"testuser\", \"password\": \"password123\" }");
+
+        Assert.assertEquals(response.getStatusCode(), 200);
+        Assert.assertTrue(response.getBody().asString().contains("Login successful"));
+    }
+}
+
+9. Define Global Properties and Drive All Global Variables from Properties File
+• Store API base URL, tokens, and other configurations in a config.properties file and load them dynamically.
+
+Example config.properties:
+
+base_url=https://api.example.com
+auth_token=your_token_here
+Example Config.java:
+
+public class Config {
+
+    private static Properties properties = new Properties();
+
+    static {
+        try {
+            FileInputStream input = new FileInputStream("src/test/resources/config/config.properties");
+            properties.load(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getBaseUrl() {
+        return properties.getProperty("base_url");
+    }
+
+    public static String getAuthToken() {
+        return properties.getProperty("auth_token");
+    }
+}
+
+10. Define Enum Class with Constants to Centralize Resource Details
+
+• Use an enum to centralize the API endpoints, HTTP methods, or any other constants.
+
+Example ApiEndpoints.java:
+
+public enum ApiEndpoints {
+
+    LOGIN("/login"),
+    GET_USER("/user");
+
+    private final String endpoint;
+
+    ApiEndpoints(String endpoint) {
+        this.endpoint = endpoint;
+    }
+
+    public String getEndpoint() {
+        return endpoint;
+    }
+}
+
+11. Implement Data Driven Mechanism to Drive Data Dynamically from Feature Files
+• Use Cucumber's Scenario Outline and Examples to pass dynamic data.
+
+Example:
+
+Scenario Outline: User login with different credentials
+    Given User sends a POST request to "/login" with username "<username>" and password "<password>"
+    Then The response status code should be <statusCode>
+
+Examples:
+    | username   | password    | statusCode |
+    | testuser   | password123 | 200        |
+    | invaliduser| wrongpass   | 401        |
+
+12. Implement Parameterization to Run Tests with Multiple Data Sets Using Cucumber Example Keyword
+• Use Cucumber's Examples table to run multiple iterations of the same scenario.
+
+13. Add More Tests and Implement Tagging Mechanism to Run Selected Tests from Test Runner File
+• Use tags in your feature files to categorize tests and run specific tests via command line.
+
+Example:
+
+@smoke
+Scenario: Valid login
+    Given User sends a POST request to "/login" with valid credentials
+    Then The response status code should be 200
+Example TestRunner.java:
+
+@CucumberOptions(
+    features = "src/test/resources/features",
+    glue = "stepDefinitions",
+    tags = "@smoke"
+)
+public class TestRunner {}
+
+14. Implement Pre and Postconditions for Tests with Cucumber Hooks
+• Use Cucumber hooks (@Before, @After) to implement pre and postconditions.
+
+Example:
+
+@Before
+public void setUp() {
+    // Initialize WebDriver or any required setup
+}
+
+@After
+public void tearDown() {
+    // Close WebDriver or any cleanup actions
+}
+
+15. Execute Complete Framework from Maven Commands
+• To run your tests from Maven, navigate to your project folder and run:
+
+mvn test
+
+• You can also pass specific tags:
+
+mvn test -Dcucumber.filter.tags="@AddPlace"
+
+16. Implement Maven Driven Global Values into Test for Dynamic Execution
+• Use Maven properties to drive dynamic values, for instance, different environments.
+
+17. Generate Reports for Test Execution Results
+• Use Cucumber reporting or Extent Reports to generate detailed reports.
+
+Example in TestRunner.java:
+
+plugin = {"pretty", "html:target/cucumber-reports", "json:target/cucumber-reports/cucumber.json"}
+
+18. Integrate Framework into Jenkins CI/CD Tool
+• Install Jenkins on your machine and set up the Jenkins job as follows:
+
+    • New Item → FreeStyle Project
+
+    • Workspace: Provide local project path (D:\Git Projects\Framework_API_RSA_Cucumber_Rest_Assured).
+
+    • Build Step: Add mvn test verify -Dcucumber.filter.tags="@AddPlace".
+
+    • Trigger on code changes and periodic execution.
+
+19. Implement Parameterized Jenkins Job to Choose Global Values at Runtime
+• Create Jenkins parameters to pass global values like environment, API keys, etc., dynamically during execution.
+
