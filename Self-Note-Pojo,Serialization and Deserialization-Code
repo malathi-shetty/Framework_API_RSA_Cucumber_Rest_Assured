@@ -1,0 +1,123 @@
+1. POJO (Plain Old Java Object):
+A POJO is a simple Java object that doesn’t have any special restrictions. It is a Java class with fields (attributes), constructors, getters, and setters to encapsulate the data. In your code, Pojo_Add_Place and Pojo_Location are examples of POJOs. These classes are used to represent the data structure that you want to work with in your tests.
+
+Pojo_Add_Place: Represents the data related to a place (like its name, address, types, location, etc.).
+
+Pojo_Location: Represents the location of the place with latitude (lat) and longitude (lng).
+
+Example: Pojo_Add_Place:
+
+public class Pojo_Add_Place {
+    private int accuracy;
+    private Pojo_Location location;
+    private String name;
+    private String phone_number;
+    private String address;
+    private List<String> types;
+    private String website;
+    private String language;
+
+    // Getters and setters
+}
+This class is used to store the details about a place. When you send a request to an API, you’ll use this class to store the place details and then serialize it into JSON.
+
+2. Serialization:
+Serialization is the process of converting a POJO object into a format (like JSON) that can be sent over the network, typically in HTTP requests.
+
+In your code:
+
+You create a POJO object (Pojo_Add_Place).
+
+The object contains all the details about a place.
+
+Before sending this object to the API, you need to serialize it into JSON, which is a standard format that the server can understand.
+
+How serialization works in your code:
+In the method addPlacePayload from the Pojo_TestDataBuild class, you're creating a Pojo_Add_Place object and setting values for different fields (like accuracy, name, phone_number, etc.). After this, you pass the object to the API request body to send it to the server.
+
+Serialization happens automatically when you pass the Pojo_Add_Place object as the request body.
+
+The given().spec(requestSpecification()).body(data.addPlacePayload(name, language, address)) part of the code is where the Pojo_Add_Place object is serialized into JSON and sent to the server.
+
+For instance:
+
+
+Pojo_Add_Place p = new Pojo_Add_Place();
+p.setAccuracy(50);
+p.setName(name);
+p.setPhone_number("(+91) 983 893 3937");
+p.setAddress(address);
+p.setWebsite("http://google.com");
+p.setLanguage(language);
+
+// Convert POJO into JSON for API request
+res = given().spec(requestSpecification()).body(p);
+At this point, the Pojo_Add_Place object p will be serialized into JSON when sent as the body of the HTTP request.
+
+3. Deserialization:
+Deserialization is the reverse of serialization. It’s the process of converting JSON data (usually in the response from the server) back into a POJO object, so you can access the values in your program.
+
+When you send a request (like a GET request), the server responds with JSON data. You need to deserialize this JSON data into a Java object (like Pojo_Add_Place or Pojo_Location) so that you can work with it in your code.
+
+How deserialization works in your code:
+After the request is made and a response is received from the server, the response is in JSON format.
+
+You use methods like getJsonPath() to extract values from the JSON response.
+
+Deserialization happens when you convert the JSON response into Java objects.
+
+For example, in the method verify_place_id_created_maps_to_using_get_place_api, you retrieve the place’s place_id from the response, and then you deserialize the JSON response to get other details about the place.
+
+
+place_id = getJsonPath(response, "place_id"); // Extract place_id from response JSON
+res = given().spec(requestSpecification()).queryParam("place_id", place_id);
+user_calls_with_http_request(resource, "GET"); // Make GET request to fetch place details
+
+// Get the name of the place from the response JSON
+String actualName = getJsonPath(response, "name");
+assertEquals(actualName, expectedName); // Compare the name in response with the expected value
+Here’s how deserialization happens:
+
+The JSON response from the API might look like this:
+
+{
+  "place_id": "12345",
+  "name": "Test Place",
+  "address": "123 Test St",
+  "phone_number": "(+91) 983 893 3937"
+}
+The getJsonPath(response, "name") method will extract the value of the name field from the JSON response. This deserialization process allows you to interact with the JSON as if it were a regular Java object.
+
+Code Relation of POJO, Serialization, and Deserialization:
+
+POJO (Plain Old Java Object): Represents the structure of the data you want to work with. For example, Pojo_Add_Place represents the details of a place.
+
+Serialization: When you want to send a request (like POST) to the API, you serialize the POJO object into JSON so that it can be transmitted over HTTP.
+
+In your code, given().spec(requestSpecification()).body(data.addPlacePayload(name, language, address)) is where the Pojo_Add_Place object is serialized into JSON.
+
+Deserialization: When you receive a response (like GET), you deserialize the JSON response into a POJO object so that you can easily access and work with the data.
+
+In your code, getJsonPath(response, "name") extracts values from the JSON response, which is essentially deserialization.
+
+Flow of Data:
+Creating a POJO object: You create a Pojo_Add_Place object and fill it with data (name, address, etc.).
+
+Serialization: The object is automatically converted into JSON when you send it in the request body (body(p)).
+
+Server Response (JSON): The server sends back a response in JSON format (for example, the details of the place).
+
+Deserialization: You extract values from the JSON response and convert them back into usable data in your code (e.g., place name, place ID).
+
+In summary:
+
+POJOs represent the data structure.
+
+Serialization converts the POJO into JSON to send to the server.
+
+Deserialization converts the JSON response back into a POJO or usable data in your code.
+
+This is how POJO, serialization, and deserialization are tied together in your test automation code to interact with APIs.
+
+
+

@@ -1,0 +1,176 @@
+1. POJO (Plain Old Java Object)
+A POJO is simply a regular Java class that holds data.
+
+Think of it like a container where we store related information. For example, if you want to store details about a place (like name, address, location, phone number), you can create a POJO class to keep these details.
+
+A POJO class typically has:
+
+Private variables (fields) that store data (e.g., name, address).
+
+Public methods called getters and setters to access and modify the data.
+
+A no-argument constructor to create the object.
+
+Example of POJO:
+In the code you shared, Pojo_Add_Place and Pojo_Location are examples of POJOs. They are used to store information about a place and its location.
+
+
+public class Pojo_Location {
+    private double lat;  // Latitude
+    private double lng;  // Longitude
+
+    // Getter and Setter for lat and lng
+    public double getLat() { return lat; }
+    public void setLat(double lat) { this.lat = lat; }
+    public double getLng() { return lng; }
+    public void setLng(double lng) { this.lng = lng; }
+}
+This class just stores latitude and longitude and provides methods to get and set these values.
+
+2. Serialization and Deserialization
+Serialization: This is the process of converting a Java object into a format (like JSON) that can be sent over the network or saved to a file.
+
+Deserialization: This is the reverse process, where we convert the received JSON (or XML) data back into a Java object so that we can work with it in our program.
+
+Simple analogy:
+Think of a POJO as a letter you want to send.
+
+Serialization is like writing the letter (your Java object) and putting it in an envelope (converting it into JSON or XML).
+
+Deserialization is like receiving the envelope, opening it, and reading the letter (converting the JSON or XML back into a Java object).
+
+In the context of API testing (like in your code), we usually need to send data to the server or get data from the server in the form of JSON. So, we serialize our Java objects to JSON to send them to the server and deserialize the server's response (in JSON) back into Java objects.
+
+Example in the code:
+You have a Pojo_Add_Place object with all the details about a place. Before sending it to an API, you need to serialize it into a JSON format:
+
+
+Pojo_Add_Place p = new Pojo_Add_Place();
+// Set data to p
+// Serialize 'p' to JSON and send it in the request body
+When you get a response (JSON format) from the API, you deserialize it into a Java object:
+
+
+Response response = res.when().post("maps/api/place/add/json");
+Pojo_Add_Place responseBody = response.as(Pojo_Add_Place.class);  // Deserialize JSON to POJO
+3. How to Use These Concepts in Automation
+In automated testing (like API testing), these concepts help us manage data efficiently when interacting with APIs.
+
+POJO: You use POJOs to organize and store the data you're going to send in a request or receive in a response.
+
+Serialization: When you want to send data to an API (like adding a new place), you first serialize your Java object into JSON. This is the request payload.
+
+Deserialization: When the API responds, the response body is in JSON. You deserialize that JSON back into a Java object to make it easier to work with.
+
+For instance, in your automation test, you send a POST request with the payload serialized as JSON to the API. Then, you receive a JSON response, and you deserialize it to check if the response is correct.
+
+4. Mock JSON (Dummy Response)
+
+Sometimes, when you're testing an API, the real API you're testing might not be available yet (because the developers are still working on it). To work around this, developers use mock APIs that simulate the real API's responses.
+
+Mock JSON is just a dummy JSON response that mimics the real API response. It helps you continue testing without waiting for the real API to be ready.
+
+For example, if you're testing an API that will return the details of a place, but the real API is not ready yet, you might use a mock JSON response that looks like this:
+
+{
+    "name": "Sample Place",
+    "address": "123 Sample Street",
+    "phone_number": "123-456-7890",
+    "location": {
+        "lat": 40.7128,
+        "lng": 74.0060
+    }
+}
+
+When the real API is available, you can replace this mock response with the actual one.
+
+5. Relation in the Project
+In project:
+
+POJOs are used to model the data that will be sent to and received from the API.
+
+Serialization and Deserialization help in converting between Java objects and JSON format (request and response bodies).
+
+Mock JSON is used to simulate API responses before the actual API is ready, so testing can proceed without waiting for the real API.
+
+Final Summary:
+POJO is a simple Java class that holds data.
+
+Serialization is converting a Java object into JSON to send to an API.
+
+Deserialization is converting JSON (received from the API) back into a Java object.
+
+Mock JSON is a simulated response used when the real API is not available.
+
+These concepts help in building robust automated API tests where we can easily handle data and verify API responses.
+
+
+********
+
+In simple terms, Serialization and Deserialization are processes used to convert objects into a format that can be easily stored or transmitted (like JSON or XML), and then back into an object.
+
+1. Serialization:
+What is it? Serialization is the process of converting an object (like Pojo_Add_Place or Pojo_Location in your code) into a format that can be stored or sent over a network. Typically, this format is JSON when dealing with web services or APIs.
+
+In the context of your code: When you create an object in your code like Pojo_Add_Place, the object holds information about a place (such as its name, address, phone number, etc.). If you want to send this object to a server (like for a POST request), you need to serialize it into a format that can be easily understood by the server. That format is typically JSON.
+
+For example:
+
+You create an instance of Pojo_Add_Place in your code.
+
+This instance has data like name, address, location, etc.
+
+The process of serialization converts this object into JSON, so the server can receive it and understand what you're trying to send.
+
+
+{
+  "accuracy": 50,
+  "location": {
+    "lat": -38.383494,
+    "lng": 33.427362
+  },
+  "name": "Test Place",
+  "phone_number": "(+91) 983 893 3937",
+  "address": "123 Test St",
+  "types": ["shoe park", "shop"],
+  "website": "http://google.com",
+  "language": "English"
+}
+How does it happen in your code? In the addPlacePayload method of the Pojo_TestDataBuild class, you're creating a Pojo_Add_Place object. You then pass this object as the request body when sending the HTTP request, which means serialization is happening when this object is automatically converted into JSON format to be sent to the server.
+
+2. Deserialization:
+What is it? Deserialization is the reverse process: it's the process of converting data (usually JSON) from a response into an object that you can work with in your code.
+
+In the context of your code: When you make a request to an API (for example, a GET request to retrieve a place's details), the server will send back a response in JSON format. To use the data from the response, you need to deserialize the JSON response into an object that your code can work with (such as a Pojo_Add_Place or Pojo_Location).
+
+For example:
+
+You send a POST request with a payload (the serialized object).
+
+The server responds with a JSON object containing the details of the created place.
+
+You deserialize this JSON response into a Java object (like Pojo_Add_Place) so that you can easily work with it in your code.
+
+How does it happen in your code? After you make a request, the response object in your step definition contains the JSON response. You can then use a method like getJsonPath() (which is a utility method in your Utils class) to extract data from the response. This is where deserialization comes into play because the JSON data from the server is converted back into an object or usable data in your code.
+
+For example, in this line:
+
+
+String actualName = getJsonPath(response, "name");
+The method getJsonPath is used to extract the name field from the JSON response, which has been deserialized so you can work with it easily.
+
+Why is this important?
+Serialization is used to send data (usually in a format like JSON) to a server when you want to create, update, or send data through an API.
+
+Deserialization is used to receive and convert that data back into a format that your program can understand and use.
+
+To summarize:
+Serialization: Converting an object to JSON (to send to the server).
+
+Deserialization: Converting JSON back to an object (to read the response from the server).
+
+In your code, these processes help interact with a server by transforming complex Java objects into JSON and vice versa, making it easier to communicate with external systems.
+
+
+
+
